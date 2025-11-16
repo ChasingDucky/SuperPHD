@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大学排名查询系统 - University Rankings</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎓 大学排名查询系统</h1>
+            <p class="subtitle">University Rankings Aggregator</p>
+        </header>
+
+        <div class="search-section">
+            <div class="search-box">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="搜索大学名称 / Search university name..."
+                    autocomplete="off"
+                >
+                <button id="searchBtn" onclick="searchUniversities()">🔍 搜索</button>
+            </div>
+
+            <div class="ranking-sources">
+                <h3>选择排名来源 / Select Ranking Sources:</h3>
+                <div class="checkboxes">
+                    <label>
+                        <input type="checkbox" id="qs" value="qs" checked>
+                        <span>QS World University Rankings</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="the" value="the" checked>
+                        <span>THE (Times Higher Education)</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="usnews" value="usnews" checked>
+                        <span>US News Best Global Universities</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="arwu" value="arwu" checked>
+                        <span>软科 (ARWU/Shanghai Ranking)</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" id="cs" value="cs" checked>
+                        <span>CS Rankings</span>
+                    </label>
+                </div>
+                <button id="calculateAvg" onclick="calculateAverageRanking()">
+                    📊 计算平均排名 / Calculate Average
+                </button>
+                <button id="updateBtn" onclick="updateRankings()" class="update-btn">
+                    🔄 更新数据 / Update Data
+                </button>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p>加载中... / Loading...</p>
+        </div>
+
+        <div id="results" class="results">
+            <!-- Results will be displayed here -->
+        </div>
+
+        <div id="stats" class="stats">
+            <p>数据库中共有 <span id="totalUniversities">0</span> 所大学</p>
+        </div>
+
+        <footer>
+            <p>数据来源 / Data sources: QS, THE, US News, ARWU (软科), CS Rankings</p>
+            <p>仅供参考 / For reference only</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
