@@ -53,21 +53,19 @@ class ARWUScraper:
                                 if not name or len(name) < 2:
                                     continue
 
-                                # Extract country - look for specific patterns
+                                # Extract country - ARWU website structure makes this difficult
+                                # Country info may be in a separate attribute or require JavaScript
+                                # Setting to None and relying on data merge with sample data for country info
                                 country = None
-                                # Try to find country in a specific column or div
-                                for col in cols[1:]:
-                                    # Look for common country indicators
-                                    country_elem = col.find('img', alt=True)  # Country flag
-                                    if country_elem:
-                                        country = country_elem.get('alt')
-                                        break
-                                    # Or look for text that looks like a country
-                                    col_text = col.get_text(strip=True)
-                                    if col_text and len(col_text) < 50 and col_text != name:
-                                        # This might be a country
-                                        if any(c in col_text for c in ['USA', 'UK', 'China', 'Japan', 'Germany']):
-                                            country = col_text
+
+                                # Try to find country flag image if available
+                                for col in cols[2:]:  # Skip rank and name columns
+                                    country_img = col.find('img', alt=True)
+                                    if country_img:
+                                        country_alt = country_img.get('alt', '').strip()
+                                        # Only use if it looks like a country name (not empty, not too long)
+                                        if country_alt and len(country_alt) < 30 and not any(char.isdigit() for char in country_alt):
+                                            country = country_alt
                                             break
 
                                 # Extract score - usually in the last column

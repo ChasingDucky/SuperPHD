@@ -13,37 +13,59 @@ scraper = ARWUScraper()
 rankings = scraper.scrape()
 
 print(f"\nTotal universities found: {len(rankings)}")
-print("\nFirst 5 universities:")
+print("\nFirst 10 universities:")
 print("-" * 60)
 
-for i, uni in enumerate(rankings[:5], 1):
-    print(f"\n{i}. {uni.get('name', 'N/A')}")
-    print(f"   Rank: {uni.get('arwu_rank', 'N/A')}")
-    print(f"   Score: {uni.get('arwu_score', 'N/A')}")
-    print(f"   Country: {uni.get('country', 'N/A')}")
+for i, uni in enumerate(rankings[:10], 1):
+    name = uni.get('name', 'N/A')
+    rank = uni.get('arwu_rank', 'N/A')
+    score = uni.get('arwu_score', 'N/A')
+    country = uni.get('country', 'N/A')
 
-# Check for the duplicate name issue
+    # Format output
+    print(f"\n{i}. {name[:50]}")
+    print(f"   Rank: {rank} | Score: {score} | Country: {country}")
+
+# Statistics
 print("\n" + "=" * 60)
-print("Checking for duplicate name issues...")
-duplicates_found = False
-for uni in rankings[:10]:
+print("Statistics:")
+print("-" * 60)
+
+total = len(rankings)
+with_country = sum(1 for uni in rankings if uni.get('country'))
+with_score = sum(1 for uni in rankings if uni.get('arwu_score'))
+
+print(f"Total universities: {total}")
+print(f"With country info: {with_country} ({with_country/total*100:.1f}%)")
+print(f"With score: {with_score} ({with_score/total*100:.1f}%)")
+
+# Check for issues
+print("\n" + "=" * 60)
+print("Data Quality Checks:")
+print("-" * 60)
+
+issues_found = False
+
+# Check for duplicate names
+for uni in rankings[:15]:
     name = uni.get('name', '')
-    # Check if name appears twice
     words = name.split()
-    if len(words) >= 2:
-        first_word = words[0]
-        if words.count(first_word) > 1:
-            print(f"⚠️  Possible duplicate: {name}")
-            duplicates_found = True
+    if len(words) >= 2 and words.count(words[0]) > 1:
+        print(f"⚠️  Duplicate name: {name}")
+        issues_found = True
 
-if not duplicates_found:
-    print("✓ No duplicate names found!")
+# Check if country equals name (the bug we're fixing)
+for uni in rankings[:15]:
+    name = uni.get('name', '')
+    country = uni.get('country', '')
+    if country and country == name:
+        print(f"⚠️  Country equals name: {name}")
+        issues_found = True
+
+if not issues_found:
+    print("✓ No data quality issues found!")
 
 print("\n" + "=" * 60)
-print("Sample data comparison:")
-print("-" * 60)
-
-from scrapers.data_loader import get_arwu_sample_data
-sample = get_arwu_sample_data()
-print(f"Sample data has {len(sample)} universities")
-print(f"First sample: {sample[0] if sample else 'None'}")
+print("Note: Country info may be None - this is expected.")
+print("The system will merge with sample data to fill in countries.")
+print("=" * 60)
