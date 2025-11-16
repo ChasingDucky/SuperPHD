@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import re
+from .data_loader import get_arwu_sample_data
 
 class ARWUScraper:
     def __init__(self):
@@ -70,23 +71,7 @@ class ARWUScraper:
 
         # If scraping fails, return sample data
         if not rankings:
-            rankings = self._get_sample_data()
+            print("Using sample data for ARWU rankings")
+            rankings = get_arwu_sample_data()
 
         return rankings
-
-    def _get_sample_data(self):
-        """Return sample data for testing purposes"""
-        return [
-            {'name': 'Harvard University', 'arwu_rank': 1, 'arwu_score': 100.0, 'country': 'United States'},
-            {'name': 'Stanford University', 'arwu_rank': 2, 'arwu_score': 76.5, 'country': 'United States'},
-            {'name': 'Massachusetts Institute of Technology (MIT)', 'arwu_rank': 3, 'arwu_score': 73.8, 'country': 'United States'},
-            {'name': 'University of Cambridge', 'arwu_rank': 4, 'arwu_score': 71.9, 'country': 'United Kingdom'},
-            {'name': 'University of California, Berkeley', 'arwu_rank': 5, 'arwu_score': 70.2, 'country': 'United States'},
-            {'name': 'Princeton University', 'arwu_rank': 6, 'arwu_score': 63.4, 'country': 'United States'},
-            {'name': 'University of Oxford', 'arwu_rank': 7, 'arwu_score': 62.8, 'country': 'United Kingdom'},
-            {'name': 'Columbia University', 'arwu_rank': 8, 'arwu_score': 62.3, 'country': 'United States'},
-            {'name': 'California Institute of Technology', 'arwu_rank': 9, 'arwu_score': 61.7, 'country': 'United States'},
-            {'name': 'University of Chicago', 'arwu_rank': 10, 'arwu_score': 60.9, 'country': 'United States'},
-            {'name': 'Tsinghua University', 'arwu_rank': 22, 'arwu_score': 55.3, 'country': 'China'},
-            {'name': 'Peking University', 'arwu_rank': 29, 'arwu_score': 52.1, 'country': 'China'},
-        ]

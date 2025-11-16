@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import re
+from .data_loader import get_usnews_sample_data
 
 class USNewsScraper:
     def __init__(self):
@@ -43,23 +44,7 @@ class USNewsScraper:
 
         # If scraping fails, return sample data
         if not rankings:
-            rankings = self._get_sample_data()
+            print("Using sample data for US News rankings")
+            rankings = get_usnews_sample_data()
 
         return rankings
-
-    def _get_sample_data(self):
-        """Return sample data for testing purposes"""
-        return [
-            {'name': 'Harvard University', 'usnews_rank': 1, 'usnews_score': 100.0, 'country': 'United States'},
-            {'name': 'Massachusetts Institute of Technology (MIT)', 'usnews_rank': 2, 'usnews_score': 98.5, 'country': 'United States'},
-            {'name': 'Stanford University', 'usnews_rank': 3, 'usnews_score': 97.8, 'country': 'United States'},
-            {'name': 'University of California, Berkeley', 'usnews_rank': 4, 'usnews_score': 96.9, 'country': 'United States'},
-            {'name': 'University of Oxford', 'usnews_rank': 5, 'usnews_score': 96.2, 'country': 'United Kingdom'},
-            {'name': 'Columbia University', 'usnews_rank': 6, 'usnews_score': 95.5, 'country': 'United States'},
-            {'name': 'University of Cambridge', 'usnews_rank': 7, 'usnews_score': 95.0, 'country': 'United Kingdom'},
-            {'name': 'California Institute of Technology', 'usnews_rank': 8, 'usnews_score': 94.3, 'country': 'United States'},
-            {'name': 'University of Washington', 'usnews_rank': 9, 'usnews_score': 93.8, 'country': 'United States'},
-            {'name': 'Yale University', 'usnews_rank': 10, 'usnews_score': 93.2, 'country': 'United States'},
-            {'name': 'Tsinghua University', 'usnews_rank': 16, 'usnews_score': 90.5, 'country': 'China'},
-            {'name': 'Peking University', 'usnews_rank': 18, 'usnews_score': 89.8, 'country': 'China'},
-        ]

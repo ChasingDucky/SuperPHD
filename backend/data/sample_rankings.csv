@@ -1,0 +1,51 @@
+university,country,qs_rank,qs_score,the_rank,the_score,usnews_rank,usnews_score,arwu_rank,arwu_score,cs_rank,cs_score
+Massachusetts Institute of Technology (MIT),United States,1,100.0,3,95.2,2,98.5,3,73.8,2,6.8
+University of Cambridge,United Kingdom,2,99.2,5,94.5,7,95.0,4,71.9,,
+University of Oxford,United Kingdom,3,99.0,1,96.5,5,96.2,7,62.8,,
+Harvard University,United States,4,98.8,4,94.8,1,100.0,1,100.0,,
+Stanford University,United States,5,98.5,2,95.8,3,97.8,2,76.5,4,6.3
+Imperial College London,United Kingdom,6,97.8,8,93.2,13,91.5,23,54.8,,
+ETH Zurich,Switzerland,7,97.2,11,92.1,28,87.2,20,55.3,,
+National University of Singapore,Singapore,8,96.8,19,88.5,26,87.8,71,42.1,,
+UCL,United Kingdom,9,96.5,22,87.9,12,91.8,17,57.1,,
+University of California Berkeley,United States,10,96.3,9,92.8,4,96.9,5,70.2,3,6.5
+University of Chicago,United States,11,96.1,13,91.5,15,90.2,10,60.9,,
+University of Pennsylvania,United States,12,95.9,16,89.8,14,90.5,15,58.7,,
+Cornell University,United States,13,95.7,20,88.2,22,88.5,12,61.2,6,5.7
+University of Melbourne,Australia,14,95.5,34,82.3,27,87.5,35,49.8,,
+California Institute of Technology,United States,15,95.3,7,93.5,8,94.3,9,61.7,,
+Yale University,United States,16,95.1,10,92.5,10,93.2,11,60.5,,
+Peking University,China,17,94.2,14,90.9,18,89.8,29,52.1,25,3.5
+Princeton University,United States,18,94.0,6,93.9,16,90.1,6,63.4,,
+University of New South Wales,Australia,19,93.8,71,68.5,37,84.2,74,41.5,,
+University of Sydney,Australia,20,93.6,60,72.1,28,87.2,80,40.2,,
+University of Toronto,Canada,21,93.4,21,88.1,16,90.1,24,54.2,,
+University of Edinburgh,United Kingdom,22,93.2,29,84.5,34,85.3,42,47.5,,
+Columbia University,United States,23,93.0,17,89.5,6,95.5,8,62.3,,
+Tsinghua University,China,14,95.0,12,91.8,16,90.5,22,55.3,15,4.2
+University of Tokyo,Japan,28,92.1,29,84.5,77,73.2,24,54.2,,
+Johns Hopkins University,United States,24,92.8,15,90.3,11,92.5,16,57.9,,
+University of Michigan,United States,25,92.5,23,87.5,19,89.2,27,53.1,9,5.1
+Duke University,United States,26,92.3,25,86.8,23,88.2,31,51.5,,
+Northwestern University,United States,27,92.1,26,86.5,24,88.0,30,51.8,,
+University of Manchester,United Kingdom,29,91.9,51,75.8,63,76.5,38,48.8,,
+Australian National University,Australia,30,91.7,62,71.8,72,74.1,67,43.2,,
+University of British Columbia,Canada,34,90.8,40,79.5,35,84.8,44,46.9,,
+McGill University,Canada,31,91.5,49,76.2,51,78.5,68,42.8,,
+New York University,United States,35,90.6,27,85.2,29,86.8,28,52.5,,
+King's College London,United Kingdom,40,89.5,35,81.9,45,81.2,57,45.1,,
+Kyoto University,Japan,36,90.3,55,74.5,124,65.2,32,51.2,,
+Seoul National University,South Korea,41,89.3,56,74.2,56,77.8,99,38.5,,
+University of California Los Angeles,United States,44,88.9,18,88.9,13,91.5,13,59.8,,
+University of Hong Kong,Hong Kong,26,92.3,31,83.8,76,73.5,101,38.2,,
+Nanyang Technological University,Singapore,32,91.3,32,83.5,30,86.5,71,42.1,,
+Carnegie Mellon University,United States,52,86.8,28,84.8,25,87.9,92,39.2,1,7.2
+Technical University of Munich,Germany,37,90.1,30,84.2,46,80.8,52,45.8,,
+University of Washington,United States,63,84.5,26,86.5,9,93.8,18,56.5,7,5.5
+Georgia Institute of Technology,United States,88,78.2,38,80.5,44,81.5,101,38.2,8,5.3
+University of Illinois Urbana-Champaign,United States,64,84.3,48,76.8,47,80.5,42,47.5,5,5.9
+University of California San Diego,United States,53,86.5,34,82.3,21,88.7,19,56.1,10,4.9
+Zhejiang University,China,42,89.1,67,70.2,66,75.8,33,50.5,,
+Fudan University,China,50,87.2,51,75.8,93,70.1,67,43.2,,
+Shanghai Jiao Tong University,China,46,88.1,52,75.5,89,70.8,46,46.5,,
+University of Science and Technology of China,China,94,77.2,74,68.2,124,65.2,62,44.1,,

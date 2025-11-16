@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import re
+from .data_loader import get_qs_sample_data
 
 class QSScraper:
     def __init__(self):
@@ -87,23 +88,7 @@ class QSScraper:
 
         # If scraping fails, return sample data for demonstration
         if not rankings:
-            rankings = self._get_sample_data()
+            print("Using sample data for QS rankings")
+            rankings = get_qs_sample_data()
 
         return rankings
-
-    def _get_sample_data(self):
-        """Return sample data for testing purposes"""
-        return [
-            {'name': 'Massachusetts Institute of Technology (MIT)', 'qs_rank': 1, 'qs_score': 100.0, 'country': 'United States'},
-            {'name': 'University of Cambridge', 'qs_rank': 2, 'qs_score': 99.2, 'country': 'United Kingdom'},
-            {'name': 'University of Oxford', 'qs_rank': 3, 'qs_score': 99.0, 'country': 'United Kingdom'},
-            {'name': 'Harvard University', 'qs_rank': 4, 'qs_score': 98.8, 'country': 'United States'},
-            {'name': 'Stanford University', 'qs_rank': 5, 'qs_score': 98.5, 'country': 'United States'},
-            {'name': 'Imperial College London', 'qs_rank': 6, 'qs_score': 97.8, 'country': 'United Kingdom'},
-            {'name': 'ETH Zurich', 'qs_rank': 7, 'qs_score': 97.2, 'country': 'Switzerland'},
-            {'name': 'National University of Singapore', 'qs_rank': 8, 'qs_score': 96.8, 'country': 'Singapore'},
-            {'name': 'UCL', 'qs_rank': 9, 'qs_score': 96.5, 'country': 'United Kingdom'},
-            {'name': 'University of California, Berkeley', 'qs_rank': 10, 'qs_score': 96.3, 'country': 'United States'},
-            {'name': 'Tsinghua University', 'qs_rank': 14, 'qs_score': 95.0, 'country': 'China'},
-            {'name': 'Peking University', 'qs_rank': 17, 'qs_score': 94.2, 'country': 'China'},
-        ]

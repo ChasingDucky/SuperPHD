@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import re
+from .data_loader import get_cs_sample_data
 
 class CSRankingsScraper:
     def __init__(self):
@@ -61,23 +62,7 @@ class CSRankingsScraper:
 
         # If scraping fails, return sample data
         if not rankings:
-            rankings = self._get_sample_data()
+            print("Using sample data for CS Rankings")
+            rankings = get_cs_sample_data()
 
         return rankings
-
-    def _get_sample_data(self):
-        """Return sample data for testing purposes"""
-        return [
-            {'name': 'Carnegie Mellon University', 'cs_rank': 1, 'cs_score': 7.2},
-            {'name': 'Massachusetts Institute of Technology (MIT)', 'cs_rank': 2, 'cs_score': 6.8},
-            {'name': 'University of California, Berkeley', 'cs_rank': 3, 'cs_score': 6.5},
-            {'name': 'Stanford University', 'cs_rank': 4, 'cs_score': 6.3},
-            {'name': 'University of Illinois Urbana-Champaign', 'cs_rank': 5, 'cs_score': 5.9},
-            {'name': 'Cornell University', 'cs_rank': 6, 'cs_score': 5.7},
-            {'name': 'University of Washington', 'cs_rank': 7, 'cs_score': 5.5},
-            {'name': 'Georgia Institute of Technology', 'cs_rank': 8, 'cs_score': 5.3},
-            {'name': 'University of Michigan', 'cs_rank': 9, 'cs_score': 5.1},
-            {'name': 'University of California, San Diego', 'cs_rank': 10, 'cs_score': 4.9},
-            {'name': 'Tsinghua University', 'cs_rank': 15, 'cs_score': 4.2},
-            {'name': 'Peking University', 'cs_rank': 25, 'cs_score': 3.5},
-        ]
