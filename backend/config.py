@@ -4,7 +4,7 @@ Configuration file for the University Rankings Scraper
 
 # Flask Configuration
 FLASK_HOST = '0.0.0.0'
-FLASK_PORT = 5000
+FLASK_PORT = 5001  # Changed from 5000 to avoid conflict with AirPlay Receiver on macOS
 FLASK_DEBUG = True
 
 # Database Configuration

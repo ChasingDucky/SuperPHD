@@ -40,7 +40,7 @@ fi
 # Start backend server
 echo ""
 echo "Starting backend server..."
-echo "Backend will be available at: http://localhost:5000"
+echo "Backend will be available at: http://localhost:5001"
 echo ""
 echo "To access the frontend:"
 echo "  Open frontend/index.html in your browser"

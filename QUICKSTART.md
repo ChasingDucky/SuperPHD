@@ -16,8 +16,8 @@ cd backend
 python app.py
 ```
 
-服务器将在 `http://localhost:5000` 启动
-The server will start at `http://localhost:5000`
+服务器将在 `http://localhost:5001` 启动
+The server will start at `http://localhost:5001`
 
 ### 3. 打开前端页面 / Open Frontend
 
@@ -79,6 +79,12 @@ Note: This may take a few minutes
 - **CS Rankings**: Computer Science Rankings (csrankings.org)
 
 ## 常见问题 / FAQ
+
+### Q: macOS上遇到"Address already in use"或"Port 5001 is in use"错误怎么办？
+**A**: 如果端口5001也被占用，您可以修改 `backend/config.py` 中的 `FLASK_PORT` 为其他端口（如5002），然后同时修改 `frontend/script.js` 中的 `API_BASE_URL` 为相应端口。
+
+### Q: What if I get "Address already in use" or "Port 5001 is in use" error on macOS?
+**A**: If port 5001 is also occupied, you can modify `FLASK_PORT` in `backend/config.py` to another port (e.g., 5002), and also update `API_BASE_URL` in `frontend/script.js` to match.
 
 ### Q: 为什么某些大学在某个排名中没有数据？
 **A**: 不同的排名系统可能不包括所有大学，或者该大学在该排名中未上榜。

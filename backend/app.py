@@ -6,6 +6,7 @@ from flask_cors import CORS
 from models import Database
 from scrapers import QSScraper, THEScraper, USNewsScraper, ARWUScraper, CSRankingsScraper
 import threading
+import config
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend access
@@ -215,7 +216,7 @@ if __name__ == '__main__':
         update_database()
 
     print("\nStarting Flask server...")
-    print("API will be available at http://localhost:5000")
+    print(f"API will be available at http://localhost:{config.FLASK_PORT}")
     print("\nAvailable endpoints:")
     print("  GET  /api/rankings - Get all rankings")
     print("  GET  /api/search?q=<query> - Search universities")
@@ -224,4 +225,4 @@ if __name__ == '__main__':
     print("  GET  /api/stats - Get database statistics")
     print("\n")
 
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=config.FLASK_DEBUG, host=config.FLASK_HOST, port=config.FLASK_PORT)
