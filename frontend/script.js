@@ -200,8 +200,19 @@ function createUniversityCardContent(uni) {
         }
     }
 
+    const favorited = isFavorite(uni.name);
+    const favoriteButtonText = favorited ? '★ 已收藏' : '⭐ 收藏';
+    const favoriteButtonClass = favorited ? 'favorite-btn favorited' : 'favorite-btn';
+
     return `
-        <div class="university-name">${uni.name}</div>
+        <div class="university-header">
+            <div class="university-name">${uni.name}</div>
+            <button class="${favoriteButtonClass}"
+                    onclick="toggleFavorite('${uni.name.replace(/'/g, "\\'")}')"
+                    data-university="${uni.name}">
+                ${favoriteButtonText}
+            </button>
+        </div>
         ${uni.country ? `<div class="university-country">📍 ${uni.country}</div>` : ''}
         <div class="rankings-grid">
             ${rankingsHTML}
@@ -523,3 +534,198 @@ window.onclick = function(event) {
         closeCompareDialog();
     }
 }
+
+// ===== NEW FEATURES =====
+
+// Global variable to store current results for sorting/filtering
+let currentResults = [];
+let currentResultsType = 'search'; // 'search', 'average', or 'favorites'
+
+// === SORTING FUNCTIONALITY ===
+function applySorting() {
+    if (currentResults.length === 0) return;
+
+    const sortBy = document.getElementById('sortBy').value;
+    if (!sortBy) {
+        displayCurrentResults();
+        return;
+    }
+
+    const sorted = [...currentResults].sort((a, b) => {
+        if (sortBy === 'name') {
+            return a.name.localeCompare(b.name);
+        } else {
+            // Sort by ranking (lower rank number is better)
+            const rankA = a.rankings?.[sortBy]?.rank || Infinity;
+            const rankB = b.rankings?.[sortBy]?.rank || Infinity;
+            return rankA - rankB;
+        }
+    });
+
+    currentResults = sorted;
+    displayCurrentResults();
+}
+
+// === ADVANCED FILTERING ===
+function applyFilters() {
+    const country = document.getElementById('countryFilter').value;
+    const rankRange = document.getElementById('rankRangeFilter').value;
+
+    // Build query parameters
+    let params = new URLSearchParams();
+    if (country) params.append('country', country);
+    if (rankRange) {
+        const [min, max] = rankRange.split('-').map(Number);
+        params.append('min_rank', min);
+        params.append('max_rank', max);
+    }
+
+    if (!country && !rankRange) {
+        return;
+    }
+
+    setLoading(true);
+    fetch(`${API_BASE_URL}/filter?${params.toString()}`)
+        .then(response => response.json())
+        .then(universities => {
+            currentResults = universities;
+            currentResultsType = 'search';
+            displayCurrentResults();
+        })
+        .catch(error => showError(error.message))
+        .finally(() => setLoading(false));
+}
+
+// === FAVORITES FUNCTIONALITY ===
+function getFavorites() {
+    const favorites = localStorage.getItem('universityFavorites');
+    return favorites ? JSON.parse(favorites) : [];
+}
+
+function saveFavorites(favorites) {
+    localStorage.setItem('universityFavorites', JSON.stringify(favorites));
+    updateFavoritesCount();
+}
+
+function toggleFavorite(universityName) {
+    let favorites = getFavorites();
+    const index = favorites.findIndex(fav => fav.name === universityName);
+
+    if (index > -1) {
+        favorites.splice(index, 1);
+    } else {
+        // Add to favorites with timestamp
+        favorites.push({
+            name: universityName,
+            addedAt: new Date().toISOString()
+        });
+    }
+
+    saveFavorites(favorites);
+
+    // Update UI
+    const button = document.querySelector(`button[data-university="${universityName}"]`);
+    if (button) {
+        button.textContent = index > -1 ? '⭐ 收藏' : '★ 已收藏';
+        button.classList.toggle('favorited');
+    }
+}
+
+function isFavorite(universityName) {
+    const favorites = getFavorites();
+    return favorites.some(fav => fav.name === universityName);
+}
+
+function updateFavoritesCount() {
+    const count = getFavorites().length;
+    const countSpan = document.getElementById('favCount');
+    if (countSpan) {
+        countSpan.textContent = count;
+    }
+}
+
+async function toggleFavoritesView() {
+    const favorites = getFavorites();
+
+    if (favorites.length === 0) {
+        showError('没有收藏的大学 / No favorite universities');
+        return;
+    }
+
+    setLoading(true);
+    try {
+        // Fetch details for all favorites
+        const promises = favorites.map(fav =>
+            fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(fav.name)}`)
+                .then(r => r.json())
+        );
+
+        const results = await Promise.all(promises);
+        const universities = results.flat().filter(u => u); // Remove nulls
+
+        currentResults = universities;
+        currentResultsType = 'favorites';
+        displayCurrentResults();
+    } catch (error) {
+        showError(error.message);
+    } finally {
+        setLoading(false);
+    }
+}
+
+// === DARK MODE FUNCTIONALITY ===
+function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+
+    // Update button icon
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+}
+
+function loadTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+    }
+}
+
+// === DISPLAY HELPERS ===
+function displayCurrentResults() {
+    if (currentResultsType === 'search' || currentResultsType === 'favorites') {
+        displayResults(currentResults);
+    } else if (currentResultsType === 'average') {
+        const selectedSources = getSelectedSources();
+        displayAverageResults(currentResults, selectedSources);
+    }
+}
+
+// Update original display functions to store results
+const originalDisplayResults = displayResults;
+displayResults = function(universities) {
+    currentResults = universities;
+    currentResultsType = 'search';
+    originalDisplayResults(universities);
+}
+
+const originalDisplayAverageResults = displayAverageResults;
+displayAverageResults = function(results, selectedSources) {
+    currentResults = results;
+    currentResultsType = 'average';
+    originalDisplayAverageResults(results, selectedSources);
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadTheme();
+    updateFavoritesCount();
+});

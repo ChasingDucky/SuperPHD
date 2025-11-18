@@ -17,6 +17,9 @@
                 <a href="#search">搜索 Search</a>
                 <a href="#compare" onclick="showCompareDialog()">对比 Compare</a>
                 <a href="#stats">统计 Stats</a>
+                <button onclick="toggleTheme()" class="theme-toggle" id="themeToggle" title="切换主题 / Toggle Theme">
+                    🌙
+                </button>
             </div>
         </div>
     </nav>
@@ -59,12 +62,40 @@
                         <option value="">所有国家 / All Countries</option>
                     </select>
 
+                    <label for="rankRangeFilter">
+                        <strong>排名范围 / Rank Range:</strong>
+                    </label>
+                    <select id="rankRangeFilter" onchange="applyFilters()">
+                        <option value="">所有 / All</option>
+                        <option value="1-10">Top 10</option>
+                        <option value="1-20">Top 20</option>
+                        <option value="1-50">Top 50</option>
+                        <option value="1-100">Top 100</option>
+                    </select>
+
+                    <label for="sortBy">
+                        <strong>排序 / Sort by:</strong>
+                    </label>
+                    <select id="sortBy" onchange="applySorting()">
+                        <option value="">默认 / Default</option>
+                        <option value="name">名称 / Name</option>
+                        <option value="qs">QS Rank</option>
+                        <option value="the">THE Rank</option>
+                        <option value="usnews">US News</option>
+                        <option value="arwu">ARWU</option>
+                        <option value="cs">CS Rank</option>
+                    </select>
+
                     <button onclick="exportData()" class="export-btn">
                         📥 导出CSV / Export CSV
                     </button>
 
                     <button onclick="showCompareDialog()" class="compare-btn">
                         ⚖️ 对比大学 / Compare
+                    </button>
+
+                    <button onclick="toggleFavoritesView()" class="favorites-btn" id="favoritesBtn">
+                        ⭐ 收藏 / Favorites (<span id="favCount">0</span>)
                     </button>
                 </div>
             </div>
