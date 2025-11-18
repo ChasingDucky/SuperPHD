@@ -24,6 +24,25 @@
                 <button id="searchBtn" onclick="searchUniversities()">🔍 搜索</button>
             </div>
 
+            <div class="filter-section">
+                <div class="filter-row">
+                    <label for="countryFilter">
+                        <strong>按国家筛选 / Filter by Country:</strong>
+                    </label>
+                    <select id="countryFilter" onchange="filterByCountry()">
+                        <option value="">所有国家 / All Countries</option>
+                    </select>
+
+                    <button onclick="exportData()" class="export-btn">
+                        📥 导出CSV / Export CSV
+                    </button>
+
+                    <button onclick="showCompareDialog()" class="compare-btn">
+                        ⚖️ 对比大学 / Compare
+                    </button>
+                </div>
+            </div>
+
             <div class="ranking-sources">
                 <h3>选择排名来源 / Select Ranking Sources:</h3>
                 <div class="checkboxes">
@@ -60,6 +79,25 @@
         <div id="loading" class="loading" style="display: none;">
             <div class="spinner"></div>
             <p>加载中... / Loading...</p>
+        </div>
+
+        <!-- Compare Dialog -->
+        <div id="compareDialog" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeCompareDialog()">&times;</span>
+                <h2>对比大学 / Compare Universities</h2>
+                <p>输入2-5所大学名称进行对比：<br>Enter 2-5 university names to compare:</p>
+                <div class="compare-inputs">
+                    <input type="text" id="compare1" placeholder="大学1 / University 1">
+                    <input type="text" id="compare2" placeholder="大学2 / University 2">
+                    <input type="text" id="compare3" placeholder="大学3 / University 3 (optional)">
+                    <input type="text" id="compare4" placeholder="大学4 / University 4 (optional)">
+                    <input type="text" id="compare5" placeholder="大学5 / University 5 (optional)">
+                </div>
+                <button onclick="compareUniversities()" class="btn-primary">
+                    开始对比 / Start Comparison
+                </button>
+            </div>
         </div>
 
         <div id="results" class="results">

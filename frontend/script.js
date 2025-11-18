@@ -4,6 +4,7 @@ const API_BASE_URL = 'http://localhost:5001/api';
 // Initialize the page
 document.addEventListener('DOMContentLoaded', function() {
     loadStats();
+    loadCountries();
 
     // Add enter key support for search
     document.getElementById('searchInput').addEventListener('keypress', function(e) {
@@ -248,7 +249,224 @@ async function loadStats() {
 
         const stats = await response.json();
         document.getElementById('totalUniversities').textContent = stats.total_universities;
+
+        // Display detailed statistics if available
+        if (stats.by_country || stats.by_source) {
+            displayDetailedStats(stats);
+        }
     } catch (error) {
         console.error('Error loading stats:', error);
+    }
+}
+
+// Display detailed statistics
+function displayDetailedStats(stats) {
+    const statsDiv = document.getElementById('stats');
+    let html = `<p>数据库中共有 <span id="totalUniversities">${stats.total_universities}</span> 所大学</p>`;
+
+    if (stats.by_source) {
+        html += `
+            <div class="stats-detail">
+                <strong>各排名系统大学数量 / Universities by Ranking:</strong>
+                <div class="stats-grid">
+                    <span>QS: ${stats.by_source.qs}</span>
+                    <span>THE: ${stats.by_source.the}</span>
+                    <span>US News: ${stats.by_source.usnews}</span>
+                    <span>ARWU: ${stats.by_source.arwu}</span>
+                    <span>CS: ${stats.by_source.cs}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    statsDiv.innerHTML = html;
+}
+
+// Load countries for filter
+async function loadCountries() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/countries`);
+
+        if (!response.ok) {
+            throw new Error('Failed to load countries');
+        }
+
+        const countries = await response.json();
+        const select = document.getElementById('countryFilter');
+
+        // Add options
+        countries.forEach(country => {
+            const option = document.createElement('option');
+            option.value = country;
+            option.textContent = country;
+            select.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error loading countries:', error);
+    }
+}
+
+// Filter by country
+async function filterByCountry() {
+    const country = document.getElementById('countryFilter').value;
+
+    if (!country) {
+        return;
+    }
+
+    setLoading(true);
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/filter?country=${encodeURIComponent(country)}`);
+
+        if (!response.ok) {
+            throw new Error('筛选失败 / Filter failed');
+        }
+
+        const universities = await response.json();
+        displayResults(universities);
+    } catch (error) {
+        showError(error.message);
+    } finally {
+        setLoading(false);
+    }
+}
+
+// Export data as CSV
+function exportData() {
+    window.location.href = `${API_BASE_URL}/export`;
+}
+
+// Show compare dialog
+function showCompareDialog() {
+    document.getElementById('compareDialog').style.display = 'flex';
+}
+
+// Close compare dialog
+function closeCompareDialog() {
+    document.getElementById('compareDialog').style.display = 'none';
+}
+
+// Compare universities
+async function compareUniversities() {
+    const universities = [];
+
+    // Collect university names from inputs
+    for (let i = 1; i <= 5; i++) {
+        const input = document.getElementById(`compare${i}`);
+        if (input && input.value.trim()) {
+            universities.push(input.value.trim());
+        }
+    }
+
+    if (universities.length < 2) {
+        alert('请至少输入2所大学名称 / Please enter at least 2 university names');
+        return;
+    }
+
+    closeCompareDialog();
+    setLoading(true);
+
+    try {
+        const selectedSources = getSelectedSources();
+
+        const response = await fetch(`${API_BASE_URL}/compare`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                universities: universities,
+                sources: selectedSources
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('对比失败 / Comparison failed');
+        }
+
+        const results = await response.json();
+        displayComparisonResults(results, selectedSources);
+    } catch (error) {
+        showError(error.message);
+    } finally {
+        setLoading(false);
+    }
+}
+
+// Display comparison results
+function displayComparisonResults(results, sources) {
+    const resultsDiv = document.getElementById('results');
+
+    const sourcesText = sources.map(s => s.toUpperCase()).join(', ');
+    let html = `<h2>大学对比结果 / University Comparison (${sourcesText})</h2>`;
+
+    // Create comparison table
+    html += `
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>大学 / University</th>
+                    <th>平均排名 / Avg Rank</th>
+                    ${sources.map(s => `<th>${s.toUpperCase()}</th>`).join('')}
+                    <th>国家 / Country</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    // Find best rank for each source
+    const bestRanks = {};
+    sources.forEach(source => {
+        bestRanks[source] = Math.min(...results.map(r => {
+            if (r.data && r.data.rankings[source].rank) {
+                return r.data.rankings[source].rank;
+            }
+            return Infinity;
+        }));
+    });
+
+    // Add rows
+    results.forEach(result => {
+        if (result.error) {
+            html += `
+                <tr>
+                    <td class="university-name">${result.name}</td>
+                    <td colspan="${sources.length + 2}" class="no-data">${result.error}</td>
+                </tr>
+            `;
+        } else {
+            html += `
+                <tr>
+                    <td class="university-name">${result.data.name}</td>
+                    <td><strong>${result.average_rank || 'N/A'}</strong></td>
+            `;
+
+            sources.forEach(source => {
+                const rank = result.data.rankings[source].rank;
+                const isBest = rank && rank === bestRanks[source];
+                html += `<td class="${isBest ? 'best-rank' : ''}">${rank || '-'}</td>`;
+            });
+
+            html += `
+                    <td>${result.data.country || '-'}</td>
+                </tr>
+            `;
+        }
+    });
+
+    html += `
+            </tbody>
+        </table>
+    `;
+
+    resultsDiv.innerHTML = html;
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('compareDialog');
+    if (event.target === modal) {
+        closeCompareDialog();
     }
 }

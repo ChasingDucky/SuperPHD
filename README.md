@@ -9,10 +9,14 @@ A web application that scrapes and aggregates university rankings from multiple 
 
 ## Features
 
-- 🔍 Search universities by name
-- 📊 View rankings from multiple sources
-- 📈 Calculate average rankings across selected sources
-- 🌐 Web interface for easy access
+- 🔍 **Search** universities by name (支持中英文搜索)
+- 📊 **View rankings** from 5 major sources (QS, THE, US News, ARWU, CS Rankings)
+- 📈 **Calculate average rankings** across selected sources
+- ⚖️ **Compare** multiple universities side-by-side
+- 🌍 **Filter** by country
+- 📥 **Export** data as CSV
+- 📈 **Statistics** dashboard with detailed metrics
+- 🌐 **Bilingual** web interface (Chinese/English)
 
 ## Installation
 
