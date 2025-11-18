@@ -261,25 +261,78 @@ async function loadStats() {
 
 // Display detailed statistics
 function displayDetailedStats(stats) {
-    const statsDiv = document.getElementById('stats');
-    let html = `<p>数据库中共有 <span id="totalUniversities">${stats.total_universities}</span> 所大学</p>`;
+    const statsGrid = document.getElementById('statsGrid');
+    let html = `
+        <div class="stat-card">
+            <div class="stat-icon">🎓</div>
+            <div class="stat-value">${stats.total_universities}</div>
+            <div class="stat-label">总大学数 / Total Universities</div>
+        </div>
+    `;
 
     if (stats.by_source) {
         html += `
-            <div class="stats-detail">
-                <strong>各排名系统大学数量 / Universities by Ranking:</strong>
-                <div class="stats-grid">
-                    <span>QS: ${stats.by_source.qs}</span>
-                    <span>THE: ${stats.by_source.the}</span>
-                    <span>US News: ${stats.by_source.usnews}</span>
-                    <span>ARWU: ${stats.by_source.arwu}</span>
-                    <span>CS: ${stats.by_source.cs}</span>
-                </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value">${stats.by_source.qs}</div>
+                <div class="stat-label">QS Rankings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📚</div>
+                <div class="stat-value">${stats.by_source.the}</div>
+                <div class="stat-label">THE Rankings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🇺🇸</div>
+                <div class="stat-value">${stats.by_source.usnews}</div>
+                <div class="stat-label">US News</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎓</div>
+                <div class="stat-value">${stats.by_source.arwu}</div>
+                <div class="stat-label">ARWU/软科</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💻</div>
+                <div class="stat-value">${stats.by_source.cs}</div>
+                <div class="stat-label">CS Rankings</div>
             </div>
         `;
     }
 
-    statsDiv.innerHTML = html;
+    // Add country stats if available
+    if (stats.by_country && stats.by_country.length > 0) {
+        const topCountries = stats.by_country.slice(0, 5);
+        topCountries.forEach((item, index) => {
+            const flag = getFlagEmoji(item.country);
+            html += `
+                <div class="stat-card">
+                    <div class="stat-icon">${flag}</div>
+                    <div class="stat-value">${item.count}</div>
+                    <div class="stat-label">${item.country}</div>
+                </div>
+            `;
+        });
+    }
+
+    statsGrid.innerHTML = html;
+}
+
+// Helper function to get country flag emoji
+function getFlagEmoji(country) {
+    const flagMap = {
+        'United States': '🇺🇸',
+        'United Kingdom': '🇬🇧',
+        'China': '🇨🇳',
+        'Germany': '🇩🇪',
+        'France': '🇫🇷',
+        'Canada': '🇨🇦',
+        'Australia': '🇦🇺',
+        'Japan': '🇯🇵',
+        'Switzerland': '🇨🇭',
+        'Netherlands': '🇳🇱'
+    };
+    return flagMap[country] || '🌍';
 }
 
 // Load countries for filter
